@@ -42,13 +42,13 @@
             android:text="People"
             android:icon="@drawable/ic_baseline_people_24"
             />
-        <androidx.viewpager.widget.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/view_pager"/>
-
-
 
     </com.google.android.material.tabs.TabLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_layout">
+
+    </RelativeLayout>
 
 </LinearLayout>

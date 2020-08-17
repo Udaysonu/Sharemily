@@ -10,16 +10,43 @@ class TabActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tab)
+
+
+        // setting the default fragment in display
+
+        val fragmentManager=supportFragmentManager
+        val fragmentTransaction=fragmentManager.beginTransaction()
+        val chatfragment=chatsFragment()
+        fragmentTransaction.add(R.id.fragment_layout, chatfragment)
+        fragmentTransaction.commit()
+
+
+
+        //Handling tab change events
         tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                Toast.makeText(baseContext,"${tab?.position}",Toast.LENGTH_LONG).show()
-                if(tab?.position==1)
-                {
 
+                //test toast
+                Toast.makeText(baseContext,"${tab?.position}",Toast.LENGTH_LONG).show()
+
+                //checking the position of the tab clicked and displaying corresponding fragments
+                if(tab?.position==0)
+                {
+                        val fragmentManager=supportFragmentManager
+                        val fragmentTransaction=fragmentManager.beginTransaction()
+                        val chatfragment=chatsFragment()
+                    fragmentTransaction.replace(R.id.fragment_layout, chatfragment)
+                    fragmentTransaction.addToBackStack(null)
+                    fragmentTransaction.commit()
                 }
                 else
                 {
+                    val newFragment = peopleFragment()
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.fragment_layout, newFragment)
+                    transaction.addToBackStack(null)
+                    transaction.commit()
 
                 }
                 // Handle tab select

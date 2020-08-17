@@ -5,6 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter
+import com.firebase.ui.firestore.paging.FirestorePagingOptions
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirestoreRegistrar
+import kotlinx.android.synthetic.main.fragment_chats.*
+import kotlinx.android.synthetic.main.fragment_people.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,19 +30,67 @@ class peopleFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    lateinit var myadapter:FirestorePagingAdapter<User,peopleAdapter.myViewHolder>
+    val store by lazy{
+        FirebaseFirestore.getInstance().collection("User")
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    recycler_view.apply{
+        layoutManager=LinearLayoutManager(requireContext())
+        adapter=myadapter
+    }
+    }
+
+    private fun setupAdapter() {
+        val config=PagedList.Config.Builder()
+            .setPageSize(8)
+            .setPrefetchDistance(2)
+            .setEnablePlaceholders(false)
+            .build()
+        val options=FirestorePagingOptions.Builder<User>()
+            .setLifecycleOwner(this)
+            .setQuery(store,config,User::class.java)
+            .build()
+        myadapter=object:FirestorePagingAdapter<User,peopleAdapter.myViewHolder>(options){
+            override fun onCreateViewHolder(
+                parent: ViewGroup,
+                viewType: Int
+            ): peopleAdapter.myViewHolder {
+
+                val view=layoutInflater.inflate(R.layout.list_item,parent,false)
+                return peopleAdapter.myViewHolder(view)
+             }
+
+            override fun onBindViewHolder(
+                holder: peopleAdapter.myViewHolder,
+                position: Int,
+                model: User
+            ) {
+                holder.bind(user=model)
+             }
+
+        }
+     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+        setupAdapter()
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_people, container, false)
     }
