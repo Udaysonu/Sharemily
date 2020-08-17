@@ -8,6 +8,8 @@ android {
     buildToolsVersion "30.0.0"
 
     defaultConfig {
+        multiDexEnabled true
+
         applicationId "com.example.sharemliy"
         minSdkVersion 16
         targetSdkVersion 29
@@ -66,7 +68,8 @@ dependencies {
     ////////////// CIRCULAR IMAGE////////////////
 
         implementation 'de.hdodenhof:circleimageview:3.1.0'
-   
+    implementation 'com.android.support:multidex:1.0.3'
+
 
 
 }

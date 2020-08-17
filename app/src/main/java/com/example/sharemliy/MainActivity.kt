@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         //if the user is not signed in ask him to sign in
         if (auth.currentUser != null) {
             // already signed in
+            startActivity(Intent(this,TabActivity::class.java))
+            finish()
         } else {
             // not signed in
                      // Get an instance of AuthUI based on the default app
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             // Successfully signed in
             if (resultCode == Activity.RESULT_OK) {
                 SignedIn()
-                finish()
+
             } else {
                 // Sign in failed
                 if (response == null) {
