@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
                             .build(),
                     RC_SIGN_IN)
 
-
         }
 
 

@@ -4,11 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".TabActivity">
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/allbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Sharemily"
+            app:menu="@menu/main_menu"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            />
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:id="@+id/tab_layout"
         android:layout_height="wrap_content"
-        android:text="Entered View Tab"
-        android:textSize="40dp"/>
+        app:tabMode="fixed">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chats"
+            android:icon="@drawable/ic_baseline_chat_24"
+            />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="People"
+            android:icon="@drawable/ic_baseline_people_24"
+            />
+        <androidx.viewpager.widget.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/view_pager"/>
+
+
+
+    </com.google.android.material.tabs.TabLayout>
 
 </LinearLayout>
