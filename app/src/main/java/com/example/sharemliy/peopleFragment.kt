@@ -1,5 +1,6 @@
 package com.example.sharemliy
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -45,10 +46,12 @@ class peopleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
     recycler_view.apply{
         layoutManager=LinearLayoutManager(requireContext())
         adapter=myadapter
     }
+
     }
 
     private fun setupAdapter() {
@@ -76,7 +79,20 @@ class peopleFragment : Fragment() {
                 position: Int,
                 model: User
             ) {
-                holder.bind(user=model)
+               if(model.auth_id==auth.uid){
+                   holder.avoid(user=model)
+               }
+                else{
+                   holder.bind(user=model){ name: String, photoUrl: String, auth_id: String ->
+                       val intent= Intent(requireContext(),ChatActivity::class.java)
+                       intent.putExtra(UID,auth_id)
+                       intent.putExtra(IMAGE,photoUrl)
+                       intent.putExtra(NAME,name)
+                       startActivity(intent)
+                   }
+               }
+
+
              }
 
         }

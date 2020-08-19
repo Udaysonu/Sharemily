@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ChatActivity">
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/chat_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/user"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="1dp" />
+            <TextView
+                android:id="@+id/chat_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:lines="1"
+                android:text="Name here"
+                android:textSize="23dp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+
+
+    </com.google.android.material.card.MaterialCardView>
+ <androidx.recyclerview.widget.RecyclerView
+     android:layout_width="match_parent"
+     android:layout_weight="1"
+
+     tools:listitem="@layout/list_item_chat_sent_message"
+     android:layout_height="match_parent"/>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="#D6D6D6"
+        app:shapeAppearanceOverlay="@style/edittext"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+      <ImageView
+          android:clickable="true"
+          android:focusable="true"
+          android:layout_marginStart="10dp"
+          android:layout_marginEnd="10dp"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:src="@drawable/smily"/>
+      <com.vanniktech.emoji.EmojiEditText
+          android:layout_weight="1"
+          android:id="@+id/message_send"
+          android:hint="Type your message"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
+      <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+          android:id="@+id/send_msg"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_marginTop="5dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginEnd="10dp"
+          android:layout_marginLeft="20dp"
+          android:src="@drawable/send"
+          android:clickable="true"
+          android:focusable="true"
+          app:civ_border_color="#FF000000"
+          />
+  </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

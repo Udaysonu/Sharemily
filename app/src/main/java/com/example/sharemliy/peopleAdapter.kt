@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class peopleAdapter(val userList: Array<User>) :RecyclerView.Adapter<peopleAdapter.myViewHolder>() {
+class peopleAdapter(val userList: ArrayList<ChatList>) :RecyclerView.Adapter<peopleAdapter.myViewHolder>() {
 
 //    internal lateinit var userList:MutableList<User>
 //    init{
@@ -16,24 +17,35 @@ class peopleAdapter(val userList: Array<User>) :RecyclerView.Adapter<peopleAdapt
 //    }
 
 
-    var onItemClick:((login:String)->Unit)?=null
 
 
     class myViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        fun bind(user:User)=with(itemView){
+        fun bind(user:User,onclick:(name:String,photoUrl:String,id:String)->Unit)=with(itemView){
             itemView.rv_name.text=user.name
             itemView.rv_status.text=user.status
+            Picasso.get().load(user.photoUrl).placeholder(R.drawable.user).error(R.drawable.user).into(itemView.rv_image)
+            setOnClickListener {
+                onclick.invoke(user.name,user.photoUrl,user.auth_id)
+            }
         }
+        fun avoid(user:User)=with(itemView){
+           itemView.visibility=View.INVISIBLE
+
+            itemView.layoutParams.height=0
+
+        }
+
     }
-
-
-
-    fun addAll(data: ArrayList<User>)
+    fun setAll(list: ArrayList<ChatList>)
     {
-//        userList.()
-//        userList.addAll(data)
+        userList.clear()
+        userList.addAll(list)
         notifyDataSetChanged()
     }
+
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item, parent, false) as View
@@ -57,7 +69,6 @@ class peopleAdapter(val userList: Array<User>) :RecyclerView.Adapter<peopleAdapt
     override fun onBindViewHolder(holder: myViewHolder, position: Int) {
 
 
-        holder.itemView.setOnClickListener {  }
     }
 
 
