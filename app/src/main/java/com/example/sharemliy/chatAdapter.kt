@@ -45,6 +45,7 @@ class chatAdapter(private val userList: ArrayList<ChatList>) :RecyclerView.Adapt
         with(holder) {
             itemView.rv_name.text = userList[position].name
             itemView.rv_status.text = userList[position].lastMessage
+            itemView.rv_date.text=userList[position].date
             Picasso.get().load(userList[position].photoUrl).placeholder(R.drawable.user)
                 .error(R.drawable.user).into(itemView.rv_image)
             itemView.setOnClickListener {

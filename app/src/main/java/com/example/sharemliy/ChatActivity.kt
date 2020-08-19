@@ -13,6 +13,9 @@ import com.vanniktech.emoji.google.GoogleEmojiProvider
 import com.vanniktech.emoji.listeners.OnEmojiClickListener
 import com.vanniktech.emoji.listeners.OnSoftKeyboardCloseListener
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.list_item_chat_sent_message.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 val auth by lazy{
     FirebaseAuth.getInstance()
@@ -60,9 +63,11 @@ class ChatActivity : AppCompatActivity() {
         store.document(auth.currentUser?.uid.toString()).get().addOnSuccessListener {
            var user= it.toObject(User::class.java)!!
             Toast.makeText(this,"${user}",Toast.LENGTH_LONG).show()
-            database.child("messaages").child(id).push().setValue(Message(string,"none","nont", FRIEND_ID,auth.currentUser?.uid.toString(),false))
-            database.child("Chat").child(auth.uid.toString()).child(FRIEND_ID).setValue(ChatList(FRIEND_ID, frient_name, image_url,string,1,"ad","asd"))
-            database.child("Chat").child(FRIEND_ID).child(auth.uid.toString()).setValue(ChatList(auth.uid.toString(),user.name, user.photoUrl,string,1,"ad","asd"))
+            val sdf = SimpleDateFormat("HH:mm")
+            val currentDate = sdf.format(Date())
+            database.child("messaages").child(id).push().setValue(Message(string,"none",System.currentTimeMillis().toString(), FRIEND_ID,auth.currentUser?.uid.toString(),false))
+            database.child("Chat").child(auth.uid.toString()).child(FRIEND_ID).setValue(ChatList(FRIEND_ID, frient_name, image_url,string,1,System.currentTimeMillis().toString(),currentDate))
+            database.child("Chat").child(FRIEND_ID).child(auth.uid.toString()).setValue(ChatList(auth.uid.toString(),user.name, user.photoUrl,string,1,System.currentTimeMillis().toString(),currentDate))
 
         }.addOnFailureListener {
             Toast.makeText(this,"failed",Toast.LENGTH_LONG).show()

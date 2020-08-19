@@ -11,13 +11,6 @@ import kotlinx.android.synthetic.main.list_item.view.*
 
 class peopleAdapter(val userList: ArrayList<ChatList>) :RecyclerView.Adapter<peopleAdapter.myViewHolder>() {
 
-//    internal lateinit var userList:MutableList<User>
-//    init{
-//        this.userList=ArrayList()
-//    }
-
-
-
 
     class myViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(user:User,onclick:(name:String,photoUrl:String,id:String)->Unit)=with(itemView){
@@ -30,12 +23,12 @@ class peopleAdapter(val userList: ArrayList<ChatList>) :RecyclerView.Adapter<peo
         }
         fun avoid(user:User)=with(itemView){
            itemView.visibility=View.INVISIBLE
-
             itemView.layoutParams.height=0
-
         }
 
     }
+
+
     fun setAll(list: ArrayList<ChatList>)
     {
         userList.clear()
@@ -49,26 +42,17 @@ class peopleAdapter(val userList: ArrayList<ChatList>) :RecyclerView.Adapter<peo
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item, parent, false) as View
-
-
         return myViewHolder(itemView)
     }
-
-
-
-
-
-
-
 
 
     override fun getItemCount(): Int {
         return userList.size
     }
 
+
+
     override fun onBindViewHolder(holder: myViewHolder, position: Int) {
-
-
     }
 
 

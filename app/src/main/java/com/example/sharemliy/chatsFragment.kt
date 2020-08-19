@@ -31,7 +31,7 @@ class chatsFragment : Fragment() {
     private var param2: String? = null
     val mRef by lazy{
         FirebaseDatabase.getInstance().getReference()
-            .child("Chat").child(auth.uid.toString())
+            .child("Chat").child(auth.uid.toString()).orderByChild("time")
 
     }
 
