@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sharemliy.ChatList
+import com.example.sharemliy.Message
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item.view.*
 
@@ -16,7 +17,6 @@ class chatAdapter(private val userList: ArrayList<ChatList>) :RecyclerView.Adapt
 
 
     inner class myViewHolder_chat(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
 
     }
 
@@ -45,7 +45,6 @@ class chatAdapter(private val userList: ArrayList<ChatList>) :RecyclerView.Adapt
         with(holder) {
             itemView.rv_name.text = userList[position].name
             itemView.rv_status.text = userList[position].lastMessage
-            itemView.rv_date.text=userList[position].date
             Picasso.get().load(userList[position].photoUrl).placeholder(R.drawable.user)
                 .error(R.drawable.user).into(itemView.rv_image)
             itemView.setOnClickListener {

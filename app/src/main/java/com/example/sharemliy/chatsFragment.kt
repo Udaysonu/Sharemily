@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import chatAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.fragment_chats.*
 
 
@@ -32,7 +31,6 @@ class chatsFragment : Fragment() {
     val mRef by lazy{
         FirebaseDatabase.getInstance().getReference()
             .child("Chat").child(auth.uid.toString()).orderByChild("time")
-
     }
 
     val auth by lazy{

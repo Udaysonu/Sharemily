@@ -46,7 +46,7 @@
  <androidx.recyclerview.widget.RecyclerView
      android:layout_width="match_parent"
      android:layout_weight="1"
-
+     android:id="@+id/chat_rv"
      tools:listitem="@layout/list_item_chat_sent_message"
      android:layout_height="match_parent"/>
     <com.google.android.material.card.MaterialCardView

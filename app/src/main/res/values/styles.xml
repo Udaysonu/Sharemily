@@ -13,6 +13,13 @@
     <item name="cornerSizeTopRight">22dp</item>
     <item name="cornerSizeTopLeft">22dp</item>
 </style>
+    <style name="ChatShapeApperance_recv">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">8dp</item>
+        <item name="cornerSizeBottomRight">22dp</item>
+        <item name="cornerSizeTopRight">22dp</item>
+        <item name="cornerSizeTopLeft">22dp</item>
+    </style>
     <style name="edittext">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeBottomLeft">22dp</item>
