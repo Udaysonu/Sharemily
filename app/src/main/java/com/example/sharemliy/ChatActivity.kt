@@ -26,15 +26,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-val auth by lazy{
-    FirebaseAuth.getInstance()
-}
-val database by lazy{
-    FirebaseDatabase.getInstance().getReference()
-}
-val store by lazy{
-    FirebaseFirestore.getInstance().collection("User")
-}
 
 
 const val UID="auth_id"
@@ -51,6 +42,20 @@ lateinit var madapter:MessagesAdapter
 lateinit var messageList:ArrayList<Message>
 
 class ChatActivity : AppCompatActivity() {
+    lateinit var childListener:ChildEventListener
+    lateinit var valueListener:ValueEventListener
+    val auth by lazy{
+        FirebaseAuth.getInstance()
+    }
+    val database by lazy{
+        FirebaseDatabase.getInstance().getReference()
+    }
+    val store by lazy{
+        FirebaseFirestore.getInstance().collection("User")
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         EmojiManager.install(GoogleEmojiProvider())
@@ -79,14 +84,21 @@ class ChatActivity : AppCompatActivity() {
         chat_name.text= frient_name
         FRIEND_ID=intent.getStringExtra(UID)
         current_chat_id=getId(FRIEND_ID)
+
         send_msg.setOnClickListener {
             val string=message_send.text.toString()
-            message_send.setText("")
-            sendmessage(string, current_chat_id)
+          if(!string.isNullOrEmpty())
+          {
+              message_send.setText("")
+              sendmessage(string, current_chat_id)
+          }
+
         }
 
         listenToMessages()
         LocationClickListener()
+
+
     }
 
     private fun LocationClickListener() {
@@ -99,15 +111,16 @@ class ChatActivity : AppCompatActivity() {
 
     private fun sendmessage(string: String, id: String) {
 
-        store.document(auth.currentUser?.uid.toString()).get().addOnSuccessListener {
+        store.document(auth.uid.toString()).get().addOnSuccessListener {
            var user= it.toObject(User::class.java)!!
             val sdf = SimpleDateFormat("HH:mm")
             val currentDate = sdf.format(Date())
 
             val timeinMillis=System.currentTimeMillis()
             database.child("messages").child(id).push().setValue(Message(string,currentDate!!,timeinMillis.toString(), auth.currentUser?.uid.toString(),FRIEND_ID,false))
-            sendMessageNotification(id,string,currentDate,timeinMillis.toInt())
-            database.child("Chat").child(FRIEND_ID).child(auth.uid.toString()).setValue(ChatList(auth.uid.toString(),user.name, user.photoUrl,string,1,-1*timeinMillis.toInt(),currentDate))
+            sendMessageNotification(id,string,currentDate,timeinMillis.toInt(),user)
+            database.child("Chat").child(auth.uid.toString()).child(FRIEND_ID).setValue(ChatList(
+                FRIEND_ID, frient_name, image_url,string,0,-1*timeinMillis.toInt(),currentDate))
 
         }.addOnFailureListener {
             Toast.makeText(this,"failed",Toast.LENGTH_LONG).show()
@@ -120,10 +133,11 @@ class ChatActivity : AppCompatActivity() {
         id: String,
         string: String,
         currentDate: String,
-        timeinMillis: Int
+        timeinMillis: Int,
+        user:User
     ) {
 
-        database.child("Chat").child(auth.uid.toString()).child(FRIEND_ID).ref.addListenerForSingleValueEvent(object:
+       database.child("Chat").child(FRIEND_ID).child(auth.uid.toString()).addListenerForSingleValueEvent(object:
             ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -139,7 +153,7 @@ class ChatActivity : AppCompatActivity() {
                 {
                     count=user.messagecount+1
                 }
-                database.child("Chat").child(auth.uid.toString()).child(FRIEND_ID).setValue(ChatList(FRIEND_ID, frient_name, image_url,string, count,-1*timeinMillis.toInt(),currentDate))
+                database.child("Chat").child(FRIEND_ID).child(auth.uid.toString()).setValue(ChatList(user?.uid.toString(),user?.name.toString() , user?.photoUrl.toString(),string, count,-1*timeinMillis,currentDate))
             }
 
         })
@@ -162,7 +176,7 @@ class ChatActivity : AppCompatActivity() {
 
 
     private fun listenToMessages(){
-        database.child("messages").child("${current_chat_id}").orderByKey()
+        childListener=database.child("messages").child("${current_chat_id}").orderByKey()
             .addChildEventListener(object :ChildEventListener{
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
@@ -196,11 +210,7 @@ class ChatActivity : AppCompatActivity() {
         chat_rv.scrollToPosition(MessagesAdapter.count()-1)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.chat_menu,menu)
-        return true
-    }
+
     @SuppressLint("MissingPermission")
     private fun setUpLocationListener() {
 
@@ -219,12 +229,22 @@ class ChatActivity : AppCompatActivity() {
                     val epoctime=System.currentTimeMillis()
                     val date=sdf.format(epoctime)
                     val time=stf.format(epoctime)
-                    database.child("Location").child(auth.uid.toString()).push().setValue(LocationDetails(
+                    database.child("Location").child(auth.uid.toString()).setValue(LocationDetails(
                         Latlong(it.latitude,it.longitude),epoctime.toInt(),time,date))
                 }
                 break;
+
             }
         }
+    }
+
+    override fun onBackPressed() {
+
+        super.onBackPressed()
+        database.child("messages").child("${current_chat_id}").removeEventListener(childListener)
+
+        this.finish()
+
     }
 
 

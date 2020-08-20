@@ -14,7 +14,7 @@
         android:layout_height="150dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/user"
+        android:src="@drawable/default_image"
         android:layout_marginTop="80px"
         android:layout_gravity="center"
         app:civ_border_width="2dp"
@@ -37,7 +37,7 @@
         android:hint="Status"
         android:text="Hey! I am using Sharemily"
         android:gravity="center"/>
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/profile_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

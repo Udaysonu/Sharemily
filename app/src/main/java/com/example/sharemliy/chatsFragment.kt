@@ -30,6 +30,8 @@ private const val ARG_PARAM2 = "param2"
  * Use the [chatsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+
 class chatsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -42,22 +44,16 @@ class chatsFragment : Fragment() {
     val auth by lazy{
         FirebaseAuth.getInstance()
     }
+    val database by lazy{
+        FirebaseDatabase.getInstance().getReference()
+    }
 
 
     lateinit var adapter:chatAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
 
 
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         adapter= chatAdapter(ArrayList())
         adapter.onItemClick={name,uid,photoUrl->
             val intent= Intent(this.requireContext(),ChatActivity::class.java)
@@ -66,9 +62,6 @@ class chatsFragment : Fragment() {
             intent.putExtra(IMAGE,photoUrl)
             startActivity(intent)
         }
-        rv_chat.adapter=adapter
-        rv_chat.layoutManager=LinearLayoutManager(this.context)
-
         mRef.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -76,17 +69,35 @@ class chatsFragment : Fragment() {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 setUpLocationListener()
-                 val userList =ArrayList<ChatList>()
-                 for(i in snapshot.children){
+                val userList =ArrayList<ChatList>()
+                for(i in snapshot.children){
 
-                                    userList.add(i.getValue(ChatList::class.java)!!)
-                 }
+                    userList.add(i.getValue(ChatList::class.java)!!)
+                }
                 adapter.setAll(userList)
                 adapter.notifyDataSetChanged()
 
             }
 
         })
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        rv_chat.adapter=adapter
+        rv_chat.layoutManager=LinearLayoutManager(this.context)
+
+
 
     }
 
@@ -96,6 +107,7 @@ class chatsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
 
         return inflater.inflate(R.layout.fragment_chats, container, false)
     }
@@ -120,7 +132,7 @@ class chatsFragment : Fragment() {
                     val epoctime=System.currentTimeMillis()
                     val date=sdf.format(epoctime)
                     val time=stf.format(epoctime)
-                    database.child("Location").child(com.example.sharemliy.auth.uid.toString()).push().setValue(LocationDetails(
+                    database.child("Location").child(auth.uid.toString()).setValue(LocationDetails(
                         Latlong(it.latitude,it.longitude),epoctime.toInt(),time,date))
                 }
                 break;

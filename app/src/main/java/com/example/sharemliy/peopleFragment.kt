@@ -1,5 +1,6 @@
 package com.example.sharemliy
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirestoreRegistrar
 import kotlinx.android.synthetic.main.fragment_chats.*
@@ -35,12 +37,21 @@ class peopleFragment : Fragment() {
     val store by lazy{
         FirebaseFirestore.getInstance().collection("User")
     }
+    val auth by lazy{
+        FirebaseAuth.getInstance()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        setupAdapter()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
 
     }
 
@@ -105,7 +116,6 @@ class peopleFragment : Fragment() {
     ): View? {
 
 
-        setupAdapter()
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_people, container, false)

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
@@ -16,20 +17,26 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.type.LatLng
 import kotlinx.android.synthetic.main.activity_tab.*
 import java.text.SimpleDateFormat
-
 class TabActivity : AppCompatActivity() {
+    val database by lazy{
+        FirebaseDatabase.getInstance().getReference()
+    }
+    val auth by lazy{
+        FirebaseAuth.getInstance()
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tab)
 
-        val database by lazy{
-            FirebaseDatabase.getInstance().getReference()
-        }
+
         // setting the default fragment in display
 
         val fragmentManager=supportFragmentManager
@@ -119,23 +126,24 @@ class TabActivity : AppCompatActivity() {
         statusCheck()
         val lm=getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val providers = lm.getProviders(true)
+        val criteria=Criteria()
         var l:Location?=null
         for( i in providers.indices.reversed())
         {
 
             l=lm.getLastKnownLocation(providers[i])
             if(l!=null)
-            {
-                l.let{
-                    val sdf=SimpleDateFormat("dd/MM/yy")
-                    val stf=SimpleDateFormat("HH:mm")
-                    val epoctime=System.currentTimeMillis()
-                    val date=sdf.format(epoctime)
-                    val time=stf.format(epoctime)
-                    database.child("Location").child(auth.uid.toString()).push().setValue(LocationDetails(
-                        Latlong(it.latitude,it.longitude),epoctime.toInt(),time,date))
-                }
+            { l.let{
+                val sdf=SimpleDateFormat("dd/MM/yy")
+                val stf=SimpleDateFormat("HH:mm")
+                val epoctime=System.currentTimeMillis()
+                val date=sdf.format(epoctime)
+                val time=stf.format(epoctime)
+                database.child("Location").child(auth.uid.toString()).setValue(LocationDetails(
+                    Latlong(it.latitude,it.longitude),epoctime.toInt(),time,date))
+            }
                 break;
+
             }
         }
     }

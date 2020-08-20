@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.rotationMatrix
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,15 +18,18 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+
+    lateinit var childEvent:ChildEventListener
     val database by lazy{
         FirebaseDatabase.getInstance().getReference()
     }
@@ -43,6 +48,33 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
         friend_name=intent.getStringExtra("NAME")
         friend_id=intent.getStringExtra("FRIEND_ID")
         friend_photo=intent.getStringExtra("PHOTO_URL")
+        var newline:LatLng
+      GlobalScope.launch {
+          withContext(Dispatchers.IO){
+              database.child("Location").child(friend_id).addValueEventListener(object:ValueEventListener{
+                  override fun onCancelled(error: DatabaseError) {
+                      TODO("Not yet implemented")
+                  }
+
+                  override fun onDataChange(snapshot: DataSnapshot) {
+                      if(::mMap.isInitialized){
+                          val loc=snapshot.getValue(LocationDetails::class.java)!!
+
+
+                          newline=LatLng(loc.latlng.latitude,loc.latlng.longitude)
+
+                          marker?.remove()
+
+                          Toast.makeText(this@LocationActivity,"Location Updated",Toast.LENGTH_SHORT).show()
+                          marker= mMap.addMarker(MarkerOptions().position(newline).title(loc.time))
+                          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newline,18f))
+
+                       }
+                  }
+
+              })
+          }
+      }
     }
 
     /**
@@ -56,50 +88,19 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.uiSettings.apply {
+            isZoomControlsEnabled=true
+            isZoomGesturesEnabled=true
+            isMyLocationButtonEnabled=true
+            isCompassEnabled=true
+        }
 
-        // Add a marker in Sydney and move the camera
 
 
-        var oldline: LatLng? =null
-        var newline:LatLng
 
-        database.child("Location").child(friend_id).addChildEventListener(object:ChildEventListener{
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-
-                val loc=snapshot.getValue(LocationDetails::class.java)!!
-                if(oldline==null)
-                {
-                    oldline= LatLng(loc.latlng.latitude,loc.latlng.longitude)
-                }
-
-                newline=LatLng(loc.latlng.latitude,loc.latlng.longitude)
-
-                marker?.remove()
-
-                mMap.addPolyline(PolylineOptions().add(oldline,newline).color(Color.GREEN)).width=2f
-               marker= mMap.addMarker(MarkerOptions().position(newline).title(loc.time))
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newline,15f))
-                oldline=newline
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
-            }
-
-        })
     }
+
+
 
 
 

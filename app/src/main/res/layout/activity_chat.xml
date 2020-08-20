@@ -24,7 +24,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/user"
+                android:src="@drawable/default_image"
                 app:civ_border_color="#FF000000"
                 app:civ_border_width="1dp" />
             <TextView
@@ -43,7 +43,7 @@
                 android:id="@+id/getLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/btn_default"
+                android:background="#FF6906"
                 android:clickable="true"
                 android:padding="16dp"
                 android:layout_gravity="center_vertical"
