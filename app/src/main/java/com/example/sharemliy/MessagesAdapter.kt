@@ -74,6 +74,11 @@ class MessagesAdapter(private val list: MutableList<Message>,private val mCurren
 
 
     companion object{
+        fun count(): Int {
+           return  messageList.size
+
+        }
+
         private const val UNSUPPORT=-1
         private const val TEXT_MESSAGE_RECEIVED=0
         private const val TEXT_MESSAGE_SENT=1

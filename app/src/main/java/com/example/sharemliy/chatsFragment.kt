@@ -1,17 +1,23 @@
 package com.example.sharemliy
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import chatAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_chats.*
+import java.text.SimpleDateFormat
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -69,8 +75,8 @@ class chatsFragment : Fragment() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                Toast.makeText(context,"changed",Toast.LENGTH_LONG).show()
-                val userList =ArrayList<ChatList>()
+                setUpLocationListener()
+                 val userList =ArrayList<ChatList>()
                  for(i in snapshot.children){
 
                                     userList.add(i.getValue(ChatList::class.java)!!)
@@ -96,6 +102,31 @@ class chatsFragment : Fragment() {
 
 
 
+    @SuppressLint("MissingPermission")
+    private fun setUpLocationListener() {
+
+        val lm=activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val providers = lm.getProviders(true)
+        var l: Location?=null
+        for( i in providers.indices.reversed())
+        {
+
+            l=lm.getLastKnownLocation(providers[i])
+            if(l!=null)
+            {
+                l.let{
+                    val sdf= SimpleDateFormat("dd/MM/yy")
+                    val stf= SimpleDateFormat("HH:mm")
+                    val epoctime=System.currentTimeMillis()
+                    val date=sdf.format(epoctime)
+                    val time=stf.format(epoctime)
+                    database.child("Location").child(com.example.sharemliy.auth.uid.toString()).push().setValue(LocationDetails(
+                        Latlong(it.latitude,it.longitude),epoctime.toInt(),time,date))
+                }
+                break;
+            }
+        }
+    }
 
 
 

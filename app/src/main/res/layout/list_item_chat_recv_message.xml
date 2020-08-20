@@ -31,7 +31,7 @@
                 android:id="@+id/content"
                 android:fontFamily="sans-serif-light"
                 android:textColor="#FFFFFF"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:text="Hello world Uday here"
                 />
 
@@ -40,6 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12:00pm"
+                android:textColor="#FFFF00"
+                android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/content"
                 android:textSize="12dp" />

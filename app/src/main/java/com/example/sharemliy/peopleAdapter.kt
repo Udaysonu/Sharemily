@@ -2,6 +2,7 @@ package com.example.sharemliy
 
 
 
+import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ class peopleAdapter(val userList: ArrayList<ChatList>) :RecyclerView.Adapter<peo
         fun bind(user:User,onclick:(name:String,photoUrl:String,id:String)->Unit)=with(itemView){
             itemView.rv_name.text=user.name
             itemView.rv_status.text=user.status
+            itemView.rv_date.visibility=View.INVISIBLE
             Picasso.get().load(user.photoUrl).placeholder(R.drawable.user).error(R.drawable.user).into(itemView.rv_image)
             setOnClickListener {
                 onclick.invoke(user.name,user.photoUrl,user.auth_id)
@@ -53,6 +55,7 @@ class peopleAdapter(val userList: ArrayList<ChatList>) :RecyclerView.Adapter<peo
 
 
     override fun onBindViewHolder(holder: myViewHolder, position: Int) {
+
     }
 
 
