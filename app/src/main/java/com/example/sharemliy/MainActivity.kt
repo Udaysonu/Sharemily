@@ -23,16 +23,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//
 //checking if the user is signed in or not
-        //if the user is not signed in ask him to sign in
-        if(mRef.document(auth.uid.toString()).get().isSuccessful)
-        {
+//        if the user is not signed in ask him to sign in
+
+        if (auth.uid != null ) {
+            // already signed in
             startActivity(Intent(this,TabActivity::class.java))
             finish()
-        }
-        else if (auth.uid != null ) {
-            // already signed in
-           SignedIn()
         } else {
             // not signed in
                      // Get an instance of AuthUI based on the default app
@@ -77,6 +75,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
     private fun SignedIn() {
         startActivity(Intent(this,UserDetails::class.java))
         finish()

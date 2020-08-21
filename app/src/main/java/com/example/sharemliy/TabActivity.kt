@@ -12,6 +12,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -38,7 +39,7 @@ class TabActivity : AppCompatActivity() {
 
 
         // setting the default fragment in display
-
+        statusCheck()
         val fragmentManager=supportFragmentManager
         val fragmentTransaction=fragmentManager.beginTransaction()
         val chatfragment=chatsFragment()
@@ -51,6 +52,7 @@ class TabActivity : AppCompatActivity() {
         tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
+
 
                 //test toast
                 Toast.makeText(baseContext,"${tab?.position}",Toast.LENGTH_LONG).show()
@@ -86,24 +88,30 @@ class TabActivity : AppCompatActivity() {
             }
         })
 
+
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onStart() {
         super.onStart()
+
         when{
-            isFineLocationGranted()->{setUpLocationListener()}
-        else->{requestAccessFineLocation()}
+            isFineLocationGranted()->{        startService(Intent(this,backgroundservice::class.java))
+            }
+            else->{requestAccessFineLocation()}
         }
 
 
-
-}
-
+        }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun isFineLocationGranted() :Boolean{
+        return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     private fun requestAccessFineLocation() {
-         requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1008)
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1008)
     }
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onRequestPermissionsResult(
@@ -116,49 +124,28 @@ class TabActivity : AppCompatActivity() {
         {
             1008-> {
                 if(grantResults.isNotEmpty() && isFineLocationGranted()){
-                    setUpLocationListener()
+                    startService(Intent(this,backgroundservice::class.java))
                 }
             }
         }
     }
-    @SuppressLint("MissingPermission")
-    private fun setUpLocationListener() {
-        statusCheck()
-        val lm=getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val providers = lm.getProviders(true)
-        val criteria=Criteria()
-        var l:Location?=null
-        for( i in providers.indices.reversed())
-        {
 
-            l=lm.getLastKnownLocation(providers[i])
-            if(l!=null)
-            { l.let{
-                val sdf=SimpleDateFormat("dd/MM/yy")
-                val stf=SimpleDateFormat("HH:mm")
-                val epoctime=System.currentTimeMillis()
-                val date=sdf.format(epoctime)
-                val time=stf.format(epoctime)
-                database.child("Location").child(auth.uid.toString()).setValue(LocationDetails(
-                    Latlong(it.latitude,it.longitude),epoctime.toInt(),time,date))
-            }
-                break;
 
-            }
-        }
-    }
-
-    fun statusCheck() {
+    private fun statusCheck() {
         val manager =
             getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.d("checkrunning","working perfectly")
             buildAlertMessageNoGps()
+        }
+        else{
+            Log.d("checkrunning","permission granted")
+
         }
     }
 
     private fun buildAlertMessageNoGps() {
-        val builder =
-            AlertDialog.Builder(this)
+        val builder =  AlertDialog.Builder(this)
         builder.setMessage("Your GPS seems to be disabled, Please enable it so that our app can show your location to your FAMILY? Do you want to enable it")
             .setCancelable(false)
             .setPositiveButton(
@@ -171,10 +158,6 @@ class TabActivity : AppCompatActivity() {
         alert.show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun isFineLocationGranted() :Boolean{
-        return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED
-    }
 
 }
 

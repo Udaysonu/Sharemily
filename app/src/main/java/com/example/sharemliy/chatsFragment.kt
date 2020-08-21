@@ -68,7 +68,6 @@ class chatsFragment : Fragment() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                setUpLocationListener()
                 val userList =ArrayList<ChatList>()
                 for(i in snapshot.children){
 
@@ -111,35 +110,6 @@ class chatsFragment : Fragment() {
 
         return inflater.inflate(R.layout.fragment_chats, container, false)
     }
-
-
-
-    @SuppressLint("MissingPermission")
-    private fun setUpLocationListener() {
-
-        val lm=activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val providers = lm.getProviders(true)
-        var l: Location?=null
-        for( i in providers.indices.reversed())
-        {
-
-            l=lm.getLastKnownLocation(providers[i])
-            if(l!=null)
-            {
-                l.let{
-                    val sdf= SimpleDateFormat("dd/MM/yy")
-                    val stf= SimpleDateFormat("HH:mm")
-                    val epoctime=System.currentTimeMillis()
-                    val date=sdf.format(epoctime)
-                    val time=stf.format(epoctime)
-                    database.child("Location").child(auth.uid.toString()).setValue(LocationDetails(
-                        Latlong(it.latitude,it.longitude),epoctime.toInt(),time,date))
-                }
-                break;
-            }
-        }
-    }
-
 
 
 
