@@ -10,21 +10,29 @@ import com.firebase.ui.auth.AuthUI.IdpConfig.*
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
     val auth = FirebaseAuth.getInstance()
     val RC_SIGN_IN=121
+    val mRef by lazy{
+        FirebaseFirestore.getInstance().collection("User")
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 //checking if the user is signed in or not
         //if the user is not signed in ask him to sign in
-        if (auth.currentUser != null) {
-            // already signed in
+        if(mRef.document(auth.uid.toString()).get().isSuccessful)
+        {
             startActivity(Intent(this,TabActivity::class.java))
             finish()
+        }
+        else if (auth.uid != null ) {
+            // already signed in
+           SignedIn()
         } else {
             // not signed in
                      // Get an instance of AuthUI based on the default app
