@@ -27,27 +27,37 @@ class MainActivity : AppCompatActivity() {
 //checking if the user is signed in or not
 //        if the user is not signed in ask him to sign in
 
+
+
         if (auth.uid != null ) {
-            // already signed in
-            startActivity(Intent(this,TabActivity::class.java))
-            finish()
+            mRef.document(auth.uid.toString()).get().addOnSuccessListener {
+                if(!it.exists())
+                {
+                    SignedIn()
+                }
+                else
+                {
+                    startActivity(Intent(this,TabActivity::class.java))
+                    finish()
+                }
+            }
         } else {
             // not signed in
-                     // Get an instance of AuthUI based on the default app
+            // Get an instance of AuthUI based on the default app
             startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(Arrays.asList(
+                AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(Arrays.asList(
 
 
-                                     PhoneBuilder().build()))
-                            .build(),
-                    RC_SIGN_IN)
-
+                        PhoneBuilder().build()))
+                    .build(),
+                RC_SIGN_IN)
         }
 
-
     }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.

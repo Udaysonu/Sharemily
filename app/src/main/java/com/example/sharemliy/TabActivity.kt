@@ -46,7 +46,9 @@ class TabActivity : AppCompatActivity() {
         fragmentTransaction.add(R.id.fragment_layout, chatfragment)
         fragmentTransaction.commit()
 
-
+        addperson.setOnClickListener {
+            startActivity(Intent(this,searchFamily::class.java))
+        }
 
         //Handling tab change events
         tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -69,7 +71,7 @@ class TabActivity : AppCompatActivity() {
                 }
                 else
                 {
-                    val newFragment = peopleFragment()
+                    val newFragment = FamilyFragment()
                     val transaction = supportFragmentManager.beginTransaction()
                     transaction.replace(R.id.fragment_layout, newFragment)
                     transaction.addToBackStack(null)

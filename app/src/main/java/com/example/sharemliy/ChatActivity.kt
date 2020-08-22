@@ -101,6 +101,12 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
+
+
+
+
+
+
     private fun LocationClickListener() {
         getLocation.setOnClickListener { val intent=Intent(this,LocationActivity::class.java)
             intent.putExtra("NAME", frient_name)
@@ -109,18 +115,31 @@ class ChatActivity : AppCompatActivity() {
             startActivity(intent) }
     }
 
+
+
+
+
+
     private fun sendmessage(string: String, id: String) {
+
+
+
 
         store.document(auth.uid.toString()).get().addOnSuccessListener {
            var user= it.toObject(User::class.java)!!
+            Toast.makeText(this,"${user}",Toast.LENGTH_LONG).show()
+
             val sdf = SimpleDateFormat("HH:mm")
             val currentDate = sdf.format(Date())
 
             val timeinMillis=System.currentTimeMillis()
             database.child("messages").child(id).push().setValue(Message(string,currentDate!!,timeinMillis.toString(), auth.currentUser?.uid.toString(),FRIEND_ID,false))
-            sendMessageNotification(id,string,currentDate,timeinMillis.toInt(),user)
-            database.child("Chat").child(auth.uid.toString()).child(FRIEND_ID).setValue(ChatList(
-                FRIEND_ID, frient_name, image_url,string,0,-1*timeinMillis.toInt(),currentDate))
+            sendMessageNotification(string,currentDate,timeinMillis.toInt(),user)
+            if(FRIEND_ID!=auth.uid.toString())
+            {
+                database.child("Chat").child(auth.uid.toString()).child(FRIEND_ID).setValue(ChatList(
+                    FRIEND_ID, frient_name, image_url,string,0,-1*timeinMillis.toInt(),currentDate))
+            }
 
         }.addOnFailureListener {
             Toast.makeText(this,"failed",Toast.LENGTH_LONG).show()
@@ -129,8 +148,12 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
+
+
+
+
+
     private fun sendMessageNotification(
-        id: String,
         string: String,
         currentDate: String,
         timeinMillis: Int,
@@ -144,21 +167,28 @@ class ChatActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                val user=snapshot.getValue(ChatList::class.java)
+                val user2=snapshot.getValue(ChatList::class.java)
                 var count:Int
-                if(user==null){
+                if(user2==null){
                     count=1
                 }
                 else
                 {
-                    count=user.messagecount+1
+                    count=user2.messagecount+1
                 }
-                database.child("Chat").child(FRIEND_ID).child(auth.uid.toString()).setValue(ChatList(user?.uid.toString(),user?.name.toString() , user?.photoUrl.toString(),string, count,-1*timeinMillis,currentDate))
+                database.child("Chat").child(FRIEND_ID).child(auth.uid.toString()).setValue(ChatList(user.auth_id,user?.name.toString() , user?.photoUrl.toString(),string, count,-1*timeinMillis,currentDate))
             }
 
         })
 
     }
+
+
+
+
+
+
+
 
     private fun getId(friendId: String?):String {
         var id:String;
@@ -173,6 +203,11 @@ class ChatActivity : AppCompatActivity() {
             }
         return id
     }
+
+
+
+
+
 
 
     private fun listenToMessages(){
@@ -203,11 +238,23 @@ class ChatActivity : AppCompatActivity() {
             })
     }
 
+
+
+
+
+
+
+
     private fun addMessage(msg: Message) {
         messageList.add(msg)
         madapter.notifyDataSetChanged()
         chat_rv.scrollToPosition(MessagesAdapter.count()-1)
     }
+
+
+
+
+
 
 
 

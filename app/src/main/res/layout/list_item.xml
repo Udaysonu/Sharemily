@@ -17,8 +17,8 @@
            android:layout_height="match_parent">
            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                android:id="@+id/rv_image"
-               android:layout_width="50dp"
-               android:layout_height="50dp"
+               android:layout_width="54dp"
+               android:layout_height="54dp"
                android:src="@drawable/default_image"
                app:civ_border_color="#FF000000"
                app:civ_border_width="0dp" />
@@ -65,12 +65,12 @@
                  <com.google.android.material.card.MaterialCardView
                      android:layout_width="wrap_content"
                     android:id="@+id/message_count_box"
-                     android:layout_marginEnd="10dp"
+
                      android:layout_marginRight="10dp"
                      app:shapeAppearanceOverlay="@style/messages_circle"
                      app:cardBackgroundColor="@color/colorPrimary"
                      android:layout_gravity="end"
-                     android:visibility="invisible"
+                    android:visibility="invisible"
                      android:layout_height="wrap_content"
                      >
                      <TextView
@@ -78,8 +78,8 @@
                          android:padding="4dp"
                          android:paddingStart="7dp"
                          android:textColor="#FFFFFF"
-
                          android:paddingEnd="7dp"
+                         android:layout_gravity="center_vertical"
                          android:id="@+id/message_count"
                          android:textStyle="bold"
                          android:layout_height="wrap_content"

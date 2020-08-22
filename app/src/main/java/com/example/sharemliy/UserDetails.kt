@@ -23,6 +23,9 @@ class UserDetails : AppCompatActivity() {
     val myRef by lazy{
         FirebaseFirestore.getInstance().collection("User")
     }
+    val mobRef by lazy{
+        FirebaseFirestore.getInstance().collection("Mobile")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +47,15 @@ class UserDetails : AppCompatActivity() {
                     Toast.makeText(this,"Profile Picture cannot be empty",Toast.LENGTH_LONG).show()
                 }
                 else
-                {   profile_button.text="Please Wait"
+                {
+                    profile_button.text="Please Wait"
                     profile_button.isEnabled=false
                     myRef.document(auth.uid.toString()).set(User(auth.uid.toString(),profile_name.text.toString(),auth.currentUser?.phoneNumber.toString(),downloadUrl.toString(),profile_status.text.toString(),false)).addOnCompleteListener {
-                        startActivity(Intent(this,TabActivity::class.java))
-                        finish()
+                        mobRef.document(auth.currentUser?.phoneNumber.toString()).set(User(auth.uid.toString(),profile_name.text.toString(),auth.currentUser?.phoneNumber.toString(),downloadUrl.toString(),profile_status.text.toString(),false)).addOnCompleteListener{
+                            startActivity(Intent(this,TabActivity::class.java))
+                            finish()
+                        }
                     }
-
                 }
             }
 

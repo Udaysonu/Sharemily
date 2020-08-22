@@ -39,9 +39,10 @@ class backgroundservice: Service() {
         val runnable= Runnable {
             while (true)
             {
-                Log.d("checkrunning","running")
-                Thread.sleep(100000)
                 setUpLocationListener()
+                Log.d("checkrunning","running")
+                Thread.sleep(1000000)
+
             }
         }
 
@@ -50,12 +51,11 @@ class backgroundservice: Service() {
         manager.createNotificationChannel(channel)
 
         val notification=NotificationCompat.Builder(this,"channel1")
-            .setContentTitle("Example Service")
-            .setContentText("welcome")
-            .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+            .setContentTitle("You are now protected")
+            .setContentText("We are sharing your location with your family")
+            .setSmallIcon(R.drawable.location_24)
             .build()
         startForeground(1,notification)
-
         Thread(runnable).start()
         return START_STICKY
     }

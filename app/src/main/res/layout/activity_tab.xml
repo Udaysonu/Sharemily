@@ -18,7 +18,32 @@
             app:title="Sharemily"
             app:menu="@menu/main_menu"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
-            />
+            >
+            <LinearLayout
+                android:id="@+id/addperson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FF6906"
+                android:clickable="true"
+                android:padding="16dp"
+                android:layout_gravity="center_vertical|right"
+
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="30dp"
+                    android:maxWidth="30dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/add_person" />
+
+
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
 
 
     </com.google.android.material.appbar.AppBarLayout>
