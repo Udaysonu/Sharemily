@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Send Request"
+                    android:text="Add User to Fmily"
                     android:id="@+id/send_request"/>
             </LinearLayout>
         </LinearLayout>

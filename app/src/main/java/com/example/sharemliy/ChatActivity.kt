@@ -127,7 +127,6 @@ class ChatActivity : AppCompatActivity() {
 
         store.document(auth.uid.toString()).get().addOnSuccessListener {
            var user= it.toObject(User::class.java)!!
-            Toast.makeText(this,"${user}",Toast.LENGTH_LONG).show()
 
             val sdf = SimpleDateFormat("HH:mm")
             val currentDate = sdf.format(Date())

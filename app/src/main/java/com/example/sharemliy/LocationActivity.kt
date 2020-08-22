@@ -67,7 +67,7 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
                           Toast.makeText(this@LocationActivity,"Location Updated",Toast.LENGTH_SHORT).show()
                           marker= mMap.addMarker(MarkerOptions().position(newline).title(loc.time))
-                          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newline,18f))
+                          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newline,15f))
 
                        }
                   }

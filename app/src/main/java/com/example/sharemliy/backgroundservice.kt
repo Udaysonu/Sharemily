@@ -41,7 +41,7 @@ class backgroundservice: Service() {
             {
                 setUpLocationListener()
                 Log.d("checkrunning","running")
-                Thread.sleep(1000000)
+                Thread.sleep(100000)
 
             }
         }
