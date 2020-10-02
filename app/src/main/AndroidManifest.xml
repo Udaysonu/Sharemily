@@ -16,8 +16,8 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".CameraActivity" >
-        </activity>
+
+
         <activity android:name=".searchFamily" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
